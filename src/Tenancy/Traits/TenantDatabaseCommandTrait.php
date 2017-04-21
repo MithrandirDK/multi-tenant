@@ -15,7 +15,7 @@ trait TenantDatabaseCommandTrait
         $repository = app(WebsiteRepositoryContract::class);
 
         if ($this->option('tenant') == 'all') {
-            return $repository->all();
+            return $repository->queryBuilder()->where('type', '!=', 5)->get();
         } else {
             return $repository
                 ->queryBuilder()
