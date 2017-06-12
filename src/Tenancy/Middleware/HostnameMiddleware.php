@@ -13,6 +13,10 @@ class HostnameMiddleware
         if ($hostname && ! is_null($redirect = $hostname->redirectActionRequired())) {
             return $redirect;
         }
+        
+        if (!$hostname) {
+            return response('Not Found', 404);
+        }
 
         return $next($request);
     }
