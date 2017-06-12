@@ -55,6 +55,8 @@ class TenantCommand extends Command
 
             $this->comment($status);
             $this->output->progressAdvance();
+            DB::disconnect('tenant');
+            DB::disconnect('hyn');
         }
         $this->output->progressFinish();
     }
