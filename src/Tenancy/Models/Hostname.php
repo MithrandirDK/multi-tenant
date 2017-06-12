@@ -123,7 +123,7 @@ class Hostname extends SystemModel
 
         // if default hostname is loaded and this is not the default hostname
         if (Request::getHttpHost() != $this->hostname) {
-            return redirect()->away("http://{$this->hostname}/".(Request::path() == '/' ? null : Request::path()));
+            return redirect()->away("https://{$this->hostname}/".(Request::path() == '/' ? null : Request::path()));
         }
     }
 }
