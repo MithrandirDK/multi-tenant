@@ -30,7 +30,7 @@ class TenantCommand extends Command
     /**
      * Delegate command to tenants.
      */
-    public function fire()
+    public function handle()
     {
         $websites = $this->getWebsitesFromOption();
 
