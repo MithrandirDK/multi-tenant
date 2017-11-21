@@ -43,9 +43,9 @@ class TenantCommand extends Command
         }
 
         $this->output->progressStart(count($websites));
+        $tenantApp = require base_path('bootstrap') . '/app.php';
         foreach ($websites as $website) {
             putenv('TENANT=' . $website->id);
-            $tenantApp = require base_path('bootstrap') . '/app.php';
             $kernel = $tenantApp->make(Kernel::class);
 
             $status = $kernel->handle(
@@ -53,8 +53,6 @@ class TenantCommand extends Command
               new ConsoleOutput
             );
             $kernel->terminate($input, $status);
-
-            $this->comment($status);
             $this->output->progressAdvance();
             DB::disconnect('tenant');
             DB::disconnect('hyn');
