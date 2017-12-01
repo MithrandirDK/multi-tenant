@@ -4,10 +4,7 @@ namespace Hyn\Tenancy\Commands;
 
 use Hyn\Tenancy\Traits\TenantDatabaseCommandTrait;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Console\Kernel;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Illuminate\Support\Facades\DB;
+use Symfony\Component\Process\Process;
 
 class TenantCommand extends Command
 {
@@ -33,29 +30,21 @@ class TenantCommand extends Command
     public function handle()
     {
         $websites = $this->getWebsitesFromOption();
-
-        $newArgv = array('artisan', $this->argument('tenantcommand'));
-        if ($arguments = $this->option('arguments')) {
-            $newArgv = array_merge($newArgv, explode(' ', trim($arguments)));
-        }
-        if ($options = $this->option('options')) {
-            $newArgv = array_merge($newArgv, explode(' ', trim($options)));
+        if (!$websites->count()) {
+            return;
         }
 
         $this->output->progressStart(count($websites));
-        $tenantApp = require base_path('bootstrap') . '/app.php';
         foreach ($websites as $website) {
-            putenv('TENANT=' . $website->id);
-            $kernel = $tenantApp->make(Kernel::class);
+            $process = new Process('php artisan ' . $this->argument('tenantcommand') . ' ' . $this->option('arguments') . ' ' . $this->option('options'), '/srv/www/laraziik/current', ['TENANT' => $website->id]);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                $this->comment($process->getExitCodeText());
+                continue;
+            }
+            $this->comment($process->getOutput());
 
-            $status = $kernel->handle(
-              $input = new ArgvInput($newArgv),
-              new ConsoleOutput
-            );
-            $kernel->terminate($input, $status);
             $this->output->progressAdvance();
-            DB::disconnect('tenant');
-            DB::disconnect('hyn');
         }
         $this->output->progressFinish();
     }
