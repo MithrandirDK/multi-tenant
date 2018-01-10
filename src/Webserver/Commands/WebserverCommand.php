@@ -50,6 +50,7 @@ class WebserverCommand extends AbstractRootCommand
 
         $action = sprintf('on%s', ucfirst($this->action));
 
+        /*
         foreach ($this->website->hostnamesWithCertificate as $hostname) {
             (new Ssl($hostname->certificate))->onUpdate();
         }
@@ -62,7 +63,22 @@ class WebserverCommand extends AbstractRootCommand
         // Webservers
         (new Apache($this->website))->{$action}();
         (new Nginx($this->website))->{$action}();
+        */
 
-        (new Database($this->website))->{$action}();
+        try {
+            (new Database($this->website))->{$action}();
+        }
+        catch (\Exception $e) {
+            // Just don't die on me
+        }
+
+    }
+
+    public function tags()
+    {
+        return [
+          $this->website->identifier,
+          $this->action,
+        ];
     }
 }
