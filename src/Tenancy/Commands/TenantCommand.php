@@ -17,6 +17,7 @@ class TenantCommand extends Command
         {--tenant= : The tenant(s) to apply on; use {all|5,8}}
         {--arguments= : Arguments for the delegated command} 
         {--options= : Options to pass on to the delegated command}
+        {--timeout=600 : Timeout for each tenant process }
     ';
 
     /**
@@ -36,7 +37,11 @@ class TenantCommand extends Command
 
         $this->output->progressStart(count($websites));
         foreach ($websites as $website) {
-            $process = new Process('php artisan ' . $this->argument('tenantcommand') . ' ' . $this->option('arguments') . ' ' . $this->option('options'), '/srv/www/laraziik/current', ['TENANT' => $website->id]);
+            $process = new Process('php artisan ' . $this->argument('tenantcommand') . ' ' . $this->option('arguments') . ' ' . $this->option('options'),
+                                   config('multi-tenant.cwd'),
+                                   ['TENANT' => $website->id],
+                                    null,
+                                    $this->option('timeout'));
             $process->run();
             if (!$process->isSuccessful()) {
                 $this->comment($process->getExitCodeText());
