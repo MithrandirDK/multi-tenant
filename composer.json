@@ -15,6 +15,8 @@
         "docs": "https://hyn.readme.io"
     },
     "require": {
+        "php": ">=7.0.0",
+        "laravel/framework": "^5.5",
         "phpseclib/phpseclib": "^2.0",
         "laracasts/presenter": "~0.2.0",
         "doctrine/dbal": "^2.5"
