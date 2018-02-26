@@ -36,6 +36,15 @@ class Website extends SystemModel
     protected $fillable = ['tenant_id', 'identifier'];
 
     protected $appends = ['directory'];
+    
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+      'modules' => 'collection'
+    ];
 
     /**
      * Load all hostnames that have a certificate.
