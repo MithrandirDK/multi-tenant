@@ -38,7 +38,7 @@ class TenantCommand extends Command
         $this->output->progressStart(count($websites));
         foreach ($websites as $website) {
             $process = new Process('php artisan ' . $this->argument('tenantcommand') . ' ' . $this->option('arguments') . ' ' . $this->option('options'),
-                                   config('multi-tenant.cwd'),
+                                   null,
                                    ['TENANT' => $website->id],
                                     null,
                                     $this->option('timeout'));
