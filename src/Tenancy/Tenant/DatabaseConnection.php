@@ -71,7 +71,7 @@ class DatabaseConnection
     protected function config()
     {
         if (app()->environment() == 'testing') {
-            return Config::get('database.connections.testing');
+            return Config::get('database.connections.' . env('DB_CONNECTION', 'testing'));
         }
         $clone = Config::get(sprintf('database.connections.%s', static::systemConnectionName()));
 
